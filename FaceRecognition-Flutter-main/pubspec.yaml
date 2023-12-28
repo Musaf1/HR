@@ -38,6 +38,9 @@ dependencies:
   facesdk_plugin:
     path: ./facesdk_plugin
   flutter_exif_rotation: ^0.5.1
+  firebase_database: ^10.3.8
+  cloud_firestore: ^4.13.6
+  firebase_storage: ^11.5.6
 
 dev_dependencies:
   flutter_test:
@@ -48,16 +51,24 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
+  firebase_core: ^2.24.2
   flutter_lints: ^2.0.0
-  settings_ui: ^2.0.2
+#  settings_ui: ^2.0.2
   image_picker: ^0.8.7
-  mysql1: ^0.20.0
+#  mysql1: ^0.20.0
   connectivity_plus: ^4.0.1
-  intl: ^0.18.1
+#  intl: ^0.18.1
   file_picker: ^5.5.0
-  ssh2: ^2.2.3
+#  ssh2: ^2.2.3
+  flutter_launcher_icons: "^0.13.1"
   fluttertoast:
   shared_preferences:
+
+flutter_launcher_icons:
+  android: ic_launcher
+  image_path: "assets/ic_launcher.png"
+  adaptive_icon_background: "assets/ic_launcher_background.png"
+  adaptive_icon_foreground: "assets/ic_launcher_foreground.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

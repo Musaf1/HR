@@ -241,7 +241,7 @@ class Prosses {
         context);
     String body= await Dialogs().showDialogEmailBody(context);
     EmailSender emailsender = EmailSender();
-    await emailsender.sendMessage(currentPersonList[index].email,"Job interview","job interview in the company",'$body \nplease come $date $time');
+   //Todo await emailsender.sendMessage(currentPersonList[index].email,"Job interview","job interview in the company",'$body \nplease come $date $time');
 
     var conn = await MySqlConnection.connect(settings);
     var result = await conn.query(

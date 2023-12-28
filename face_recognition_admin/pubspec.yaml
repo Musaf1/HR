@@ -55,7 +55,7 @@ dev_dependencies:
   intl: ^0.18.1
   dartssh2: ^2.8.2
   open_app_file: ^4.0.2
-  shared_preferences:
+  #shared_preferences:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

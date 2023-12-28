@@ -89,6 +89,7 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
     double maxSimilarity = -1;
     int maxSimilarityId = 0;
     String maxSimilarityName = "";
+    String maxSimilarityAttId = "";
     // String maxSimilarityJob = "";
     double maxLiveness = -1;
     dynamic enrolledFace; //, identifiedFace;
@@ -102,6 +103,7 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
           maxSimilarity = similarity;
           maxSimilarityId = person.id;
           maxSimilarityName = person.name;
+          maxSimilarityAttId = person.id_att;
           // maxSimilarityJob = person.job;
           maxLiveness = face['liveness'];
           // identifiedFace = face['faceJpg'];
@@ -111,7 +113,8 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
 
       if (maxSimilarity > _identifyThreshold &&
           maxLiveness > _livenesThreshold) {
-        index = await widget.homePageState.timeId(maxSimilarityId);
+        faceDetectionViewController?.stopCamera();
+        index = await widget.homePageState.timeId(maxSimilarityAttId);
         if (index == 1) {
           textStatus = 'You have been attended';
           imageStatus = 'assets/correct.png';
@@ -182,34 +185,34 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
                       faces: _faces, livenessThreshold: _livenesThreshold),
                 ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                        label: const Text(
-                          'Add CV',
-                          // style: textStyle
-                        ),
-                        icon: const Icon(
-                          //  color: textColor,
-                          Icons.person_add_outlined,
-                          // color: Colors.white70,
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.only(top: 10, bottom: 10),
-                            // foregroundColor: Colors.white70,
-                            //  backgroundColor: color,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
-                            )),
-                        onPressed: () {
-                          MyHomePageState().initShowDialog();
-                          MyHomePageState().enrollPerson(context);
-                        }),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: ElevatedButton.icon(
+              //           label: const Text(
+              //             'Add CV',
+              //             // style: textStyle
+              //           ),
+              //           icon: const Icon(
+              //             //  color: textColor,
+              //             Icons.person_add_outlined,
+              //             // color: Colors.white70,
+              //           ),
+              //           style: ElevatedButton.styleFrom(
+              //               padding: const EdgeInsets.only(top: 10, bottom: 10),
+              //               // foregroundColor: Colors.white70,
+              //               //  backgroundColor: color,
+              //               shape: const RoundedRectangleBorder(
+              //                 borderRadius:
+              //                     BorderRadius.all(Radius.circular(12.0)),
+              //               )),
+              //           onPressed: () {
+              //             MyHomePageState().initShowDialog();
+              //             MyHomePageState().enrollPerson(context);
+              //           }),
+              //     ),
+              //   ],
+              // ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
