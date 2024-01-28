@@ -1,14 +1,14 @@
 {
   "project_info": {
-    "project_number": "655953773234",
-    "firebase_url": "https://hrs-app-d2cbe-default-rtdb.europe-west1.firebasedatabase.app",
-    "project_id": "hrs-app-d2cbe",
-    "storage_bucket": "hrs-app-d2cbe.appspot.com"
+    "project_number": "179260166495",
+    "firebase_url": "https://hrs-app-56220-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "hrs-app-56220",
+    "storage_bucket": "hrs-app-56220.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:655953773234:android:5a7e17b090901a4bb07fab",
+        "mobilesdk_app_id": "1:179260166495:android:4546bef284bbc81c8d26ea",
         "android_client_info": {
           "package_name": "com.example.facerecognition_flutter"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCInxcfC-WxBoH2K0kOvoN4gW_wnXxPdb0"
+          "current_key": "AIzaSyDlcpZGLUhIlgAwJ7D5Ed3_IKcZjscQkas"
         }
       ],
       "services": {
@@ -27,7 +27,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:655953773234:android:cf87c72482189c8db07fab",
+        "mobilesdk_app_id": "1:179260166495:android:7030d0f1e46e6b498d26ea",
         "android_client_info": {
           "package_name": "com.kbyai.facerecognition_flutter"
         }
@@ -35,7 +35,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCInxcfC-WxBoH2K0kOvoN4gW_wnXxPdb0"
+          "current_key": "AIzaSyDlcpZGLUhIlgAwJ7D5Ed3_IKcZjscQkas"
         }
       ],
       "services": {
