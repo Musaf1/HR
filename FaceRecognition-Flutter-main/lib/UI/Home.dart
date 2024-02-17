@@ -1,7 +1,8 @@
 
+import 'package:facerecognition_flutter/UI/Employed.dart';
 import 'package:flutter/material.dart';
 import '../Processes/Init.dart';
-import '../Processes/Process.dart';
+
 
 
 class MyHomePage extends StatefulWidget {
@@ -22,12 +23,13 @@ class MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: FutureBuilder(
-        future: Process().personStatusPage(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          return snapshot.data ?? Container();
-        },
-      ),
+      child: const EmployedPage(),
+      // child: FutureBuilder(
+      //   future: Process().personStatusPage(),
+      //   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+      //     return snapshot.data ?? Container();
+      //   },
+      // ),
     );
   }
 }

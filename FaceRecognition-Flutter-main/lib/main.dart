@@ -1,18 +1,15 @@
 
-import 'package:facerecognition_flutter/UI/Register.dart';
 import 'package:facerecognition_flutter/UI/Sign.dart';
-import 'package:facerecognition_flutter/UI/resetPassword.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_core/firebase_core.dart';
 import 'UI/ThePage.dart';
 import 'package:go_router/go_router.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+void main() {
+  //WidgetsFlutterBinding.ensureInitialized();
+  //await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -23,14 +20,15 @@ class MyApp extends StatelessWidget {
   final _router = GoRouter(
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SignScreen()),
-      GoRoute(path: '/Register', builder: (context, state) => const RegisterScreen()),
-      GoRoute(path: '/resetPassword', builder: (context, state) => const ResetPasswordScreen()),
+      // GoRoute(path: '/Register', builder: (context, state) => const RegisterScreen()),
+      //GoRoute(path: '/resetPassword', builder: (context, state) => const ResetPasswordScreen()),
       GoRoute(
         path: '/ThePage',
         builder: (context, state) => const ThePage(),
       ),
     ],
   );
+
 
   @override
   Widget build(BuildContext context) {

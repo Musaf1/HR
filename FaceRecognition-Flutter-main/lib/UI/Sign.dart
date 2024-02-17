@@ -1,10 +1,8 @@
-
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+// import 'package:go_router/go_router.dart';
 
 import '../Processes/Init.dart';
 import '../Processes/Process.dart';
-
 
 class SignScreen extends StatefulWidget {
   const SignScreen({super.key});
@@ -26,7 +24,7 @@ class _SignScreenState extends State<SignScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String email = '';
+    String username = '';
     String password = '';
     return Scaffold(
       appBar: AppBar(),
@@ -48,11 +46,11 @@ class _SignScreenState extends State<SignScreen> {
                 ),
                 TextFormField(
                   onChanged: (value) {
-                    email = value.toString();
+                    username = value.toString();
                   },
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
-                    labelText: 'Email Address',
+                    labelText: 'User Name',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email),
                   ),
@@ -84,23 +82,23 @@ class _SignScreenState extends State<SignScreen> {
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        GoRouter.of(context).go('/resetPassword');
-                      },
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          color: Color.fromRGBO(0, 100, 100, 1),
-                          fontSize: 12.0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     TextButton(
+                //       onPressed: () {
+                //         GoRouter.of(context).go('/resetPassword');
+                //       },
+                //       child: const Text(
+                //         'Forgot Password?',
+                //         style: TextStyle(
+                //           color: Color.fromRGBO(0, 100, 100, 1),
+                //           fontSize: 12.0,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 const SizedBox(
                   height: 15,
                 ),
@@ -112,8 +110,9 @@ class _SignScreenState extends State<SignScreen> {
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: MaterialButton(
-                    onPressed: () async =>
-                        Process().signUser(email, password, context, this),
+                    onPressed: () async {
+                      await Process().signUser(username, password, context, this);
+                    },
                     color: const Color.fromRGBO(0, 150, 150, 1),
                     child: const Text(
                       'Login',
@@ -131,24 +130,24 @@ class _SignScreenState extends State<SignScreen> {
                   color: Color.fromRGBO(0, 150, 150, 1),
                   height: 30,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      '''Don't have an account? ''',
-                      style: TextStyle(
-                        color: Color.fromRGBO(0, 100, 100, 1),
-                        fontSize: 16.0,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        GoRouter.of(context).go('/Register');
-                      },
-                      child: const Text('Register Now'),
-                    )
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     const Text(
+                //       '''Don't have an account? ''',
+                //       style: TextStyle(
+                //         color: Color.fromRGBO(0, 100, 100, 1),
+                //         fontSize: 16.0,
+                //       ),
+                //     ),
+                //     TextButton(
+                //       onPressed: () {
+                //         GoRouter.of(context).go('/Register');
+                //       },
+                //       child: const Text('Register Now'),
+                //     )
+                //   ],
+                // ),
               ],
             ),
           ),

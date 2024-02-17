@@ -1,4 +1,4 @@
-import '../Data/person.dart';
+
 import 'package:flutter/material.dart';
 
 import '../Processes/Init.dart';
@@ -24,7 +24,7 @@ class EmployedPageState extends State<EmployedPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Process().canAttendance(),
+      future: Process().notDeparture(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         return snapshot.hasData
             ? Container(
@@ -92,8 +92,7 @@ class EmployedPageState extends State<EmployedPage> {
                                         onPressed: () async {
                                           Init().initShowDialog(context, this);
                                           Progress().progress(context);
-                                          List<Person> personList =
-                                              await LoadPerson().loadPerson();
+                                             // await LoadPerson().loadPerson();
                                           Navigator.of(context).pop();
                                           setState(() {
                                             if (snapshot.data == 'Attendance') {
@@ -102,15 +101,14 @@ class EmployedPageState extends State<EmployedPage> {
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         FaceRecognitionView(
-                                                          personList:
-                                                              personList,
+                                                          // personList:
+                                                          //     personList,
                                                           employedPageState:
                                                               this,
                                                         )),
                                               );
                                             } else {
-                                              Dialogs().confirmDeparture(
-                                                  context, personList);
+                                              Dialogs().confirmDeparture(context,this);
                                             }
                                           });
                                         })
@@ -120,34 +118,34 @@ class EmployedPageState extends State<EmployedPage> {
                             ),
                           ),
                         ),
-                        Visibility(
-                            visible: snapshot.data,
-                            child: const SizedBox(width: 20)),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                              label: const Text(
-                                'Leave request',
-                                // style: textStyle
-                              ),
-                              icon: const Icon(
-                                //  color: textColor,
-                                Icons.logout_outlined,
-                                // color: Colors.white70,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.only(
-                                      top: 10, bottom: 10),
-                                  // foregroundColor: Colors.white70,
-                                  //  backgroundColor: color,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12.0)),
-                                  )),
-                              onPressed: () {
-                                Init().initShowDialog(context, this);
-                                Process().enrollLeave(context, this);
-                              }),
-                        ),
+                        // Visibility(
+                        //     visible: snapshot.data,
+                        //     child: const SizedBox(width: 20)),
+                        // Expanded(
+                        //   child: ElevatedButton.icon(
+                        //       label: const Text(
+                        //         'Leave request',
+                        //         // style: textStyle
+                        //       ),
+                        //       icon: const Icon(
+                        //         //  color: textColor,
+                        //         Icons.logout_outlined,
+                        //         // color: Colors.white70,
+                        //       ),
+                        //       style: ElevatedButton.styleFrom(
+                        //           padding: const EdgeInsets.only(
+                        //               top: 10, bottom: 10),
+                        //           // foregroundColor: Colors.white70,
+                        //           //  backgroundColor: color,
+                        //           shape: const RoundedRectangleBorder(
+                        //             borderRadius:
+                        //                 BorderRadius.all(Radius.circular(12.0)),
+                        //           )),
+                        //       onPressed: () {
+                        //         Init().initShowDialog(context, this);
+                        //         //Process().enrollLeave(context, this);
+                        //       }),
+                        // ),
                       ],
                     ),
                   ],

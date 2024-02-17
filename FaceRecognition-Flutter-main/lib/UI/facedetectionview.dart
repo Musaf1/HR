@@ -3,18 +3,20 @@ import 'package:facerecognition_flutter/UI/Employed.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:facesdk_plugin/facedetection_interface.dart';
+import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:facesdk_plugin/facesdk_plugin.dart';
-import '../Data/person.dart';
+import 'package:sqflite/sqflite.dart';
 import '../Processes/Process.dart';
 
-
 class FaceRecognitionView extends StatefulWidget {
-  final List<Person> personList;
+  // final List<Person> personList;
   final EmployedPageState employedPageState;
 
   const FaceRecognitionView(
-      {super.key, required this.personList, required this.employedPageState});
+      {super.key,
+      // required this.personList,
+      required this.employedPageState});
 
   @override
   State<StatefulWidget> createState() => FaceRecognitionViewState();
@@ -93,44 +95,53 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
     double maxSimilarity = -1;
     //int maxSimilarityId = 0;
     String maxSimilarityName = "";
-    String maxSimilarityAttId = "";
+    // String maxSimilarityAttId = "";
     // String maxSimilarityJob = "";
     double maxLiveness = -1;
     dynamic enrolledFace; //, identifiedFace;
     if (faces.length > 0) {
       var face = faces[0];
-      var person = widget.personList[0];
+      var databasesPath = await getDatabasesPath();
+      String path = join(databasesPath, 'mydb.db');
+      Database database = await openDatabase(
+        path,
+        version: 1,
+      );
+      List<Map> list = await database.rawQuery('SELECT * FROM Face');
+      //var person = widget.personList[0];
         double similarity = await _facesdkPlugin.similarityCalculation(
-                face['templates'], person.templates) ??
+                face['templates'], list[0]['templates']) ??
             -1;
         if (maxSimilarity < similarity) {
+          final prefs = await SharedPreferences.getInstance();
+          // maxSimilarityAttId = (await prefs.getInt('id').toString());
+          maxSimilarityName = (await prefs.getString('name'))!;
           maxSimilarity = similarity;
           //maxSimilarityId = person.id;
-          maxSimilarityName = person.name;
-          maxSimilarityAttId = person.id_att;
+          //maxSimilarityName = person.name;
+          //maxSimilarityAttId = person.id_att;
           // maxSimilarityJob = person.job;
           maxLiveness = face['liveness'];
           // identifiedFace = face['faceJpg'];
-          enrolledFace = person.faceJpg;
+          enrolledFace = list[0]['faceJpg'];
         }
 
-
-      if (maxSimilarity > _identifyThreshold &&
-          maxLiveness > _livenesThreshold) {
-        faceDetectionViewController?.stopCamera();
-        index = await Process().timeId(maxSimilarityAttId, context);
-        if (index == 1) {
-          textStatus = 'You have been attended';
-          imageStatus = 'assets/correct.png';
-        } else if (index == 2) {
-          textStatus = 'You have attended before';
-          imageStatus = 'assets/logistics.png';
-        } else {
-          textStatus = 'Outside working hours';
-          imageStatus = 'assets/working.png';
+        if (maxSimilarity > _identifyThreshold &&
+            maxLiveness > _livenesThreshold) {
+          faceDetectionViewController?.stopCamera();
+          index = await Process().timeRecord();
+          if (index == 1) {
+            textStatus = 'You have been attended';
+            imageStatus = 'assets/correct.png';
+          } else if (index == 2) {
+            textStatus = 'You have attended before';
+            imageStatus = 'assets/logistics.png';
+          } else {
+            textStatus = 'Outside working hours';
+            imageStatus = 'assets/working.png';
+          }
+          recognized = true;
         }
-        recognized = true;
-      }
     }
 
     Future.delayed(const Duration(milliseconds: 100), () {
@@ -147,6 +158,9 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
         faceDetectionViewController?.stopCamera();
         setState(() {
           _faces = null;
+        });
+        widget.employedPageState.setState(() {
+
         });
       }
     });
