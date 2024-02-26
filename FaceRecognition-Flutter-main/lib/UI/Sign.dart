@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
-
 import '../Processes/Init.dart';
 import '../Processes/Process.dart';
 
@@ -82,23 +80,6 @@ class _SignScreenState extends State<SignScreen> {
                     ),
                   ),
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   children: [
-                //     TextButton(
-                //       onPressed: () {
-                //         GoRouter.of(context).go('/resetPassword');
-                //       },
-                //       child: const Text(
-                //         'Forgot Password?',
-                //         style: TextStyle(
-                //           color: Color.fromRGBO(0, 100, 100, 1),
-                //           fontSize: 12.0,
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 const SizedBox(
                   height: 15,
                 ),
@@ -130,24 +111,6 @@ class _SignScreenState extends State<SignScreen> {
                   color: Color.fromRGBO(0, 150, 150, 1),
                   height: 30,
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     const Text(
-                //       '''Don't have an account? ''',
-                //       style: TextStyle(
-                //         color: Color.fromRGBO(0, 100, 100, 1),
-                //         fontSize: 16.0,
-                //       ),
-                //     ),
-                //     TextButton(
-                //       onPressed: () {
-                //         GoRouter.of(context).go('/Register');
-                //       },
-                //       child: const Text('Register Now'),
-                //     )
-                //   ],
-                // ),
               ],
             ),
           ),

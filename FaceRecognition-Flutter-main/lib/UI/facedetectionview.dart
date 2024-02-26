@@ -10,12 +10,10 @@ import 'package:sqflite/sqflite.dart';
 import '../Processes/Process.dart';
 
 class FaceRecognitionView extends StatefulWidget {
-  // final List<Person> personList;
   final EmployedPageState employedPageState;
 
   const FaceRecognitionView(
       {super.key,
-      // required this.personList,
       required this.employedPageState});
 
   @override
@@ -24,16 +22,11 @@ class FaceRecognitionView extends StatefulWidget {
 
 class FaceRecognitionViewState extends State<FaceRecognitionView> {
   dynamic _faces;
-  // dynamic _identifiedFace;
   dynamic _enrolledFace;
   double _livenesThreshold = 0;
   double _identifyThreshold = 0;
   bool _recognized = false;
-
-  // int _identifiedId = 0;
   String _identifiedName = "";
-
-  // String _identifiedJob = "";
   final _facesdkPlugin = FacesdkPlugin();
   late bool _cameraLens;
   late int index;
@@ -93,10 +86,7 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
 
     bool recognized = false;
     double maxSimilarity = -1;
-    //int maxSimilarityId = 0;
     String maxSimilarityName = "";
-    // String maxSimilarityAttId = "";
-    // String maxSimilarityJob = "";
     double maxLiveness = -1;
     dynamic enrolledFace; //, identifiedFace;
     if (faces.length > 0) {
@@ -108,21 +98,14 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
         version: 1,
       );
       List<Map> list = await database.rawQuery('SELECT * FROM Face');
-      //var person = widget.personList[0];
         double similarity = await _facesdkPlugin.similarityCalculation(
                 face['templates'], list[0]['templates']) ??
             -1;
         if (maxSimilarity < similarity) {
           final prefs = await SharedPreferences.getInstance();
-          // maxSimilarityAttId = (await prefs.getInt('id').toString());
           maxSimilarityName = (await prefs.getString('name'))!;
           maxSimilarity = similarity;
-          //maxSimilarityId = person.id;
-          //maxSimilarityName = person.name;
-          //maxSimilarityAttId = person.id_att;
-          // maxSimilarityJob = person.job;
           maxLiveness = face['liveness'];
-          // identifiedFace = face['faceJpg'];
           enrolledFace = list[0]['faceJpg'];
         }
 
@@ -148,11 +131,8 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
       if (!mounted) return false;
       setState(() {
         _recognized = recognized;
-        // _identifiedId = maxSimilarityId;
         _identifiedName = maxSimilarityName;
-        // _identifiedJob = maxSimilarityJob;
         _enrolledFace = enrolledFace;
-        // _identifiedFace = identifiedFace;
       });
       if (recognized) {
         faceDetectionViewController?.stopCamera();
@@ -175,16 +155,6 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
       fontWeight: FontWeight.w600,
       fontSize: 26,
     );
-    // const textStyle2 = TextStyle(
-    //   color: Color.fromRGBO(0, 150, 150, 1),
-    //   fontWeight: FontWeight.w600,
-    //   fontSize: 20,
-    // );
-    // const textStyle3 = TextStyle(
-    //   color: Color.fromARGB(0xFF, 0x0, 150, 15),
-    //   fontWeight: FontWeight.w600,
-    //   fontSize: 26,
-    // );
     return WillPopScope(
       onWillPop: () async {
         faceDetectionViewController?.stopCamera();
@@ -203,34 +173,6 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
                       faces: _faces, livenessThreshold: _livenesThreshold),
                 ),
               ),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: ElevatedButton.icon(
-              //           label: const Text(
-              //             'Add CV',
-              //             // style: textStyle
-              //           ),
-              //           icon: const Icon(
-              //             //  color: textColor,
-              //             Icons.person_add_outlined,
-              //             // color: Colors.white70,
-              //           ),
-              //           style: ElevatedButton.styleFrom(
-              //               padding: const EdgeInsets.only(top: 10, bottom: 10),
-              //               // foregroundColor: Colors.white70,
-              //               //  backgroundColor: color,
-              //               shape: const RoundedRectangleBorder(
-              //                 borderRadius:
-              //                     BorderRadius.all(Radius.circular(12.0)),
-              //               )),
-              //           onPressed: () {
-              //             MyHomePageState().initShowDialog();
-              //             MyHomePageState().enrollPerson(context);
-              //           }),
-              //     ),
-              //   ],
-              // ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -243,7 +185,6 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
                       ),
                       const SizedBox(width: 8),
                       Switch(
-                          //activeColor: const Color.fromRGBO(0, 96, 100, 1),
                           inactiveTrackColor:
                               const Color.fromRGBO(0, 172, 193, 1),
                           inactiveThumbColor:
@@ -313,91 +254,14 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
                                             height: 16,
                                           ),
                                           Text(textStatus, style: textStyle),
-                                          // const SizedBox(
-                                          //   height: 16,
-                                          // ),
-                                          // ElevatedButton.icon(
-                                          //   icon: const Icon(
-                                          //     //  color: textColor,
-                                          //     Icons.check_circle_outline,
-                                          //     color: Colors.green,
-                                          //   ),
-                                          //   style: ElevatedButton.styleFrom(
-                                          //     // padding: const EdgeInsets.only(top: 10, bottom: 10),
-                                          //     // foregroundColor: Colors.white70,
-                                          //     //  backgroundColor: color,
-                                          //       shape: const RoundedRectangleBorder(
-                                          //         borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                          //       )),
-                                          //   onPressed: () {
-                                          //     GoRouter.of(context).go('/');
-                                          //   },
-                                          //   label: const Text('OK'),
-                                          // ),
                                         ],
                                       )
                                     : const SizedBox(
                                         height: 1,
                                       ),
-                                // _identifiedFace != null
-                                //     ? Column(
-                                //         children: [
-                                //           ClipRRect(
-                                //             borderRadius:
-                                //                 BorderRadius.circular(8.0),
-                                //             child: Image.memory(
-                                //               _identifiedFace,
-                                //               width: 160,
-                                //               height: 160,
-                                //             ),
-                                //           ),
-                                //           const SizedBox(
-                                //             height: 5,
-                                //           ),
-                                //           const Text('Identified',
-                                //               style: textStyle2)
-                                //         ],
-                                //       )
-                                //     : const SizedBox(
-                                //         height: 1,
-                                //       )
                               ],
                             ),
                           ),
-                          // const SizedBox(
-                          //   height: 10,
-                          // ),
-                          // Row(
-                          //   children: [
-                          //     const SizedBox(
-                          //       width: 16,
-                          //     ),
-                          //     const Text('Id: ', style: textStyle),
-                          //     Text('$_identifiedId', style: textStyle3)
-                          //   ],
-                          // ),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   children: [
-                          //     const SizedBox(
-                          //       width: 16,
-                          //     ),
-                          //    // const Text('Name: ', style: textStyle),
-                          //     Text(_identifiedName, style: textStyle3)
-                          //   ],
-                          // ),
-                          // const SizedBox(
-                          //   height: 16,
-                          // ),
-                          // Row(
-                          //   children: [
-                          //     const SizedBox(
-                          //       width: 16,
-                          //     ),
-                          //     const Text('Job: ', style: textStyle),
-                          //     Text(_identifiedJob, style: textStyle3)
-                          //   ],
-                          // ),
                         ]),
                   )),
             ],
