@@ -5,21 +5,23 @@ import 'package:facesdk_plugin/facesdk_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
+import 'Process.dart';
 
 class Init {
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
-  // final GoogleSignIn _googleSignIn = GoogleSignIn();
   final facesdkPlugin = FacesdkPlugin();
 
   Future initShowDialog(context, state) async {
     if (await connectivityResult()) {
-      if(await isServerOnline(context)){
-        //if(await Process().determinePosition()){
-          init(context, state);
-       // }else{
-        //  Dialogs().showDialogFun(context, state, 'Out of department range');
-       // }
-      }else{
+      if (await isServerOnline(context)) {
+        try {
+          if (await Process().buildingPosition()) {
+            init(context, state);
+            return true;
+          } else {
+            Dialogs().showDialogFun(context, state, 'Out of department range');
+          }
+        } catch (e) {}
+      } else {
         Dialogs().showDialogFun(context, state, 'Connect to server');
       }
     } else {
@@ -34,12 +36,12 @@ class Init {
       if (Platform.isAndroid) {
         await facesdkPlugin
             .setActivation(
-                "CFO+UUpNLaDMlmdjoDlhBMbgCwT27CzQJ4xHpqe9rDOErwoEUeCGPRTfQkZEAFAFdO0+rTNRIwnQwpqqGxBbfnLkfyFeViVS5bpWZFk15QXP3ZtTEuU1rK5zsFwcZrqRUxsG9dXImc+Vw5Ddc9zBp9GEUuDycHLqC9KgQGVb0TS2u9Kz67HQOSDw9hskjBpjRbqiG+F/h5DBLPzjgFh1Y6vzgg6I59FzTOcdrdEbX7kI15Nwgf1hvHGtSgON/a0Fmw+XNdnxH2pVY96mcTemHYZAtxh8lA/t1DtTyZXpHjW8N6nq4UN2YDlKLXSrDzLpLHJmBsdpH71AXb7dfAq94Q==")
+            "CFO+UUpNLaDMlmdjoDlhBMbgCwT27CzQJ4xHpqe9rDOErwoEUeCGPRTfQkZEAFAFdO0+rTNRIwnQwpqqGxBbfnLkfyFeViVS5bpWZFk15QXP3ZtTEuU1rK5zsFwcZrqRUxsG9dXImc+Vw5Ddc9zBp9GEUuDycHLqC9KgQGVb0TS2u9Kz67HQOSDw9hskjBpjRbqiG+F/h5DBLPzjgFh1Y6vzgg6I59FzTOcdrdEbX7kI15Nwgf1hvHGtSgON/a0Fmw+XNdnxH2pVY96mcTemHYZAtxh8lA/t1DtTyZXpHjW8N6nq4UN2YDlKLXSrDzLpLHJmBsdpH71AXb7dfAq94Q==")
             .then((value) => facepluginState = value ?? -1);
       } else {
         await facesdkPlugin
             .setActivation(
-                "nWsdDhTp12Ay5yAm4cHGqx2rfEv0U+Wyq/tDPopH2yz6RqyKmRU+eovPeDcAp3T3IJJYm2LbPSEz"
+            "nWsdDhTp12Ay5yAm4cHGqx2rfEv0U+Wyq/tDPopH2yz6RqyKmRU+eovPeDcAp3T3IJJYm2LbPSEz"
                 "+e+YlQ4hz+1n8BNlh2gHo+UTVll40OEWkZ0VyxkhszsKN+3UIdNXGaQ6QL0lQunTwfamWuDNx7Ss"
                 "efK/3IojqJAF0Bv7spdll3sfhE1IO/m7OyDcrbl5hkT9pFhFA/iCGARcCuCLk4A6r3mLkK57be4r"
                 "T52DKtyutnu0PDTzPeaOVZRJdF0eifYXNvhE41CLGiAWwfjqOQOHfKdunXMDqF17s+LFLWwkeNAD"
@@ -82,72 +84,11 @@ class Init {
   }
 
   Future<bool> isServerOnline(context) async {
-    //Progress().progress(context);
     try {
-      final response = await http.get(Uri.parse("http://192.168.8.48:8000/"));
-      //Navigator.of(context).pop();
+      final response = await http.get(Uri.parse(Process().baseUrl));
       return response.statusCode == 200;
     } catch (e) {
       return false;
     }
   }
-
-// Future signOutWithGoogle(context) async {
-//   try {
-//     // Sign out from Firebase Authentication
-//     await _auth.signOut();
-//
-//     // Additionally sign out from Google account
-//     await _googleSignIn.signOut();
-//     final prefs = await SharedPreferences.getInstance();
-//     await prefs.setString('personId', '');
-//     await prefs.setString('personStatus', '');
-//     GoRouter.of(context).go('/');
-//
-//     // Optional: Clear locally cached user data
-//     // ...
-//     // Navigate to the login screen or display success message
-//     print('Successfully signed out');
-//   } catch (error) {
-//     print("Error signing out: $error");
-//     // Handle signout errors appropriately
-//   }
-// }
-
-// Future signInWithGoogle(context, state) async {
-//   Progress().progress(context);
-// );
-// _auth.userChanges().listen((User? user) async {
-//   if (user == null) {
-//     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-//
-//     // Obtain the auth details from the request
-//     final GoogleSignInAuthentication? googleAuth =
-//         await googleUser?.authentication;
-//
-//     // Create a new credential
-//     final credential = GoogleAuthProvider.credential(
-//       accessToken: googleAuth?.accessToken,
-//       idToken: googleAuth?.idToken,
-//     );
-//
-//     // Once signed in, return the UserCredential
-//     await _auth.signInWithCredential(credential);
-//     state.setState(() {
-//       signInWithGoogle(context, state);
-//     });
-//   } else {
-//     //signOutWithGoogle();
-//     user = _auth.currentUser;
-//     if (await Process().haveCV(context, user?.email)) {
-//       //print(_auth.currentUser?.displayName);
-//       await Process().enrollPerson(context, state, user?.displayName,
-//           user?.email, user?.phoneNumber, _facesdkPlugin);
-//       await Process().haveCV(context, user?.email);
-//       GoRouter.of(context).go('/ThePage');
-//     }
-//     GoRouter.of(context).go('/ThePage');
-//   }
-// });
-// }
 }
