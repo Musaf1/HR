@@ -102,6 +102,7 @@ class Dialogs {
         });
   }
 
+
   Future changeMac(TheContext, text, {bool b = true, linId}) async {
     await showDialog(
         context: TheContext,
