@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:android_id/android_id.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
@@ -97,14 +98,14 @@ class Process {
         onCreate: (Database db, int version) async {
       await db.execute('CREATE TABLE Face(templates BLOB , faceJpg BLOB )');
     });
-    final facesdkPlugin = Init().facesdkPlugin;
+    final facesdkPlugin = await Init().facesdkPlugin;
     final prefs = await SharedPreferences.getInstance();
     var id = prefs.getInt('id');
     var t = prefs.getString('token');
     var data = await getData('linkUser/', t: t);
     for (var d in data) {
       if (d['name'] == id) {
-        if (d['image'] == '${baseUrl}media/default.png') {
+        if (d['image'] == '${baseUrl}media/default.png' || d['image'] == null) {
           await Fluttertoast.showToast(
               msg: "Add your face photo!",
               toastLength: Toast.LENGTH_LONG,
@@ -224,13 +225,13 @@ class Process {
               var userInfo = await getData('employees_info/${linId['name']}/',
                   t: token['token']);
               final prefs = await SharedPreferences.getInstance();
-              await prefs.setInt('change_mac', user['change_mac']);
+              await prefs.setInt('change_mac', linId['change_mac']);
               await prefs.setInt('id', userInfo['id']);
               await prefs.setInt('uid', user['id']);
               await prefs.setString('name', userInfo['name']);
               await prefs.setInt('build', userInfo['build']);
               await prefs.setString('token', token['token'].toString());
-              await getMac(user, context);
+              await getMac(linId, context);
               await addFace();
             }
           }
@@ -269,7 +270,6 @@ class Process {
       var attTime = prefs.getString('att_time');
       var p = prefs.getInt('id');
       var t = prefs.getString('token');
-      //todo long id
       var timeNow = await getData('time/');
       int time1 = timeToInt(readTimestampH(double.parse(attTime!).toInt()));
       int time2 = timeToInt(task ? "16:00" : timeNow['time']);
@@ -290,9 +290,8 @@ class Process {
     final prefs = await SharedPreferences.getInstance();
     var data = await getData('date/');
     if (prefs.getString('att_time') != null) {
-      if (
-          (data['date'] - double.parse(prefs.getString('att_time')!) >
-              86400.0)) {
+      if ((data['date'] - double.parse(prefs.getString('att_time')!) >
+          86400.0)) {
         var attTime = prefs.getString('att_time');
         var p = prefs.getInt('id');
         var t = prefs.getString('token');
@@ -300,7 +299,7 @@ class Process {
           "name": p,
           "date": readTimestampD(double.parse(attTime!).toInt()),
           "Time_attendace": readTimestampH(double.parse(attTime).toInt()),
-          "time_leaves": "16:00"
+          "time_leaves": "12:00"
         };
         await setData('attendace_info/', td, t: t);
         await prefs.remove('att_time');
@@ -315,7 +314,6 @@ class Process {
       return 'Attendance';
     }
     return 'Departure';
-
   }
 
   String readTimestampH(int timestamp) {
@@ -372,20 +370,23 @@ class Process {
         10000);
   }
 
-  Future getMac(user, context) async {
+  Future getMac(linId, context) async {
     final prefs = await SharedPreferences.getInstance();
     var mac = await GetMac.macAddress;
-    if (user['mac'] != mac) {
-      if (user['change_mac']! < 4) {
+    if (mac=='') {
+      mac = (await const AndroidId().getId())!;
+    }
+    if (linId['mac'] != mac) {
+      if (linId['change_mac']! < 4) {
         int i = 4 - prefs.getInt('change_mac')!;
         if (i == 1) {
           await Dialogs().changeMac(
               context, 'You can change device 1 more time',
-              user: user);
+              linId: linId);
         } else {
           await Dialogs().changeMac(
               context, 'You can change device $i more times',
-              user: user);
+              linId: linId);
         }
       } else {
         await Dialogs().changeMac(context,
@@ -397,14 +398,14 @@ class Process {
     }
   }
 
-  Future updateMac(user, context) async {
+  Future updateMac(linId, context) async {
     final prefs = await SharedPreferences.getInstance();
     var t = prefs.getString('token');
     var p = prefs.getInt('uid');
-    user['mac'] = await GetMac.macAddress;
-    user['change_mac'] += 1;
-    await prefs.setInt('change_mac', user['change_mac']);
-    await updateData('user/$p/', user, t);
+    linId['mac'] = await GetMac.macAddress;
+    linId['change_mac'] += 1;
+    await prefs.setInt('change_mac', linId['change_mac']);
+    await updateData('linkUser/$p/', linId, t);
     await userAccess(context);
   }
 
@@ -427,8 +428,8 @@ class Process {
   Future<bool> canAttendance() async {
     var getTime = await getData('time/');
     int time = seconds(getTime['time']);
-    int start = seconds("8:00");
-    int end = seconds("16:00");
+    int start = seconds("7:45");
+    int end = seconds("16:15");
 
     //if (start <= time && time < end) {
     final prefs = await SharedPreferences.getInstance();
@@ -452,5 +453,5 @@ class Process {
     final minutes = int.parse(timeString.substring(3));
     return hours * 60 + minutes;
   }
-}
 
+}

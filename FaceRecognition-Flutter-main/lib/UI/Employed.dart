@@ -120,8 +120,19 @@ class EmployedPageState extends State<EmployedPage> {
                                     : const CircularProgressIndicator();
                               },
                             ),
-                            const SizedBox(
-                              width: 20,
+                            FutureBuilder(
+                              future: Process().canAttendance(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<dynamic> snapshot3) {
+                                return snapshot3.hasData
+                                    ? Visibility(
+                                        visible: snapshot3.data,
+                                        child: const SizedBox(
+                                          width: 20,
+                                        ),
+                                      )
+                                    : Container();
+                              },
                             ),
                             Expanded(
                               child: ElevatedButton.icon(

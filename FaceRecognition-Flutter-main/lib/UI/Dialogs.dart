@@ -102,7 +102,7 @@ class Dialogs {
         });
   }
 
-  Future changeMac(TheContext, text, {bool b = true, user}) async {
+  Future changeMac(TheContext, text, {bool b = true, linId}) async {
     await showDialog(
         context: TheContext,
         builder: (context) {
@@ -137,7 +137,7 @@ class Dialogs {
                               )),
                               onPressed: () async {
                                 Navigator.of(context).pop();
-                                await Process().updateMac(user, TheContext);
+                                await Process().updateMac(linId, TheContext);
                               },
                               label: const Text('Confirm'),
                             ),
