@@ -61,9 +61,6 @@ class Process {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
-        if (response.statusCode == 400) {
-          return jsonDecode(response.body);
-        }
         return Future.error('Server Error');
       }
     } catch (e) {
@@ -372,10 +369,9 @@ class Process {
 
   Future getMac(linId, context) async {
     final prefs = await SharedPreferences.getInstance();
-    var mac = await GetMac.macAddress;
-    if (mac=='') {
-      mac = (await const AndroidId().getId())!;
-    }
+    var mac = await GetMac.macAddress == ""
+        ? await const AndroidId().getId()
+        : await GetMac.macAddress;
     if (linId['mac'] != mac) {
       if (linId['change_mac']! < 4) {
         int i = 4 - prefs.getInt('change_mac')!;
@@ -401,11 +397,15 @@ class Process {
   Future updateMac(linId, context) async {
     final prefs = await SharedPreferences.getInstance();
     var t = prefs.getString('token');
-    var p = prefs.getInt('uid');
-    linId['mac'] = await GetMac.macAddress;
-    linId['change_mac'] += 1;
+    var data = {
+      "mac": await GetMac.macAddress == ""
+          ? await const AndroidId().getId()
+          : await GetMac.macAddress,
+      "change_mac": linId['change_mac'] + 1,
+      "name": linId['name']
+    };
     await prefs.setInt('change_mac', linId['change_mac']);
-    await updateData('linkUser/$p/', linId, t);
+    await updateData('linkUser/${linId['id']}/', data, t);
     await userAccess(context);
   }
 
@@ -453,5 +453,4 @@ class Process {
     final minutes = int.parse(timeString.substring(3));
     return hours * 60 + minutes;
   }
-
 }
