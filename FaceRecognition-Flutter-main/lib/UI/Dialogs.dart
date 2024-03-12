@@ -1,8 +1,7 @@
-
-import 'package:facerecognition_flutter/Processes/Process.dart';
+import 'package:facerecognition_flutter/Processes/process.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../Processes/Init.dart';
+import '../Processes/init.dart';
 
 class Dialogs {
   final _formKey = GlobalKey<FormState>();
@@ -13,8 +12,8 @@ class Dialogs {
         context: context,
         builder: (context) {
           return Center(
-            child: WillPopScope(
-              onWillPop: () async => false,
+            child: PopScope(
+              canPop: false,
               child: SingleChildScrollView(
                 child: AlertDialog(
                   //  backgroundColor: color,
@@ -102,14 +101,13 @@ class Dialogs {
         });
   }
 
-
-  Future changeMac(TheContext, text, {bool b = true, linId}) async {
+  Future changeMac(theContext, text, {bool b = true, linId}) async {
     await showDialog(
-        context: TheContext,
+        context: theContext,
         builder: (context) {
           return Center(
-            child: WillPopScope(
-              onWillPop: () async => false,
+            child: PopScope(
+              canPop: false,
               child: SingleChildScrollView(
                 child: AlertDialog(
                   //  backgroundColor: color,
@@ -138,7 +136,7 @@ class Dialogs {
                               )),
                               onPressed: () async {
                                 Navigator.of(context).pop();
-                                await Process().updateMac(linId, TheContext);
+                                await Process().updateMac(linId, theContext);
                               },
                               label: const Text('Confirm'),
                             ),
@@ -178,8 +176,8 @@ class Dialogs {
     showDialog<String>(
       barrierDismissible: false,
       context: context,
-      builder: (BuildContext context) => WillPopScope(
-        onWillPop: () async => false,
+      builder: (BuildContext context) => PopScope(
+        canPop: false,
         child: AlertDialog(
           elevation: 24,
           title: Text(
@@ -198,7 +196,9 @@ class Dialogs {
                 )),
                 onPressed: () async {
                   Navigator.pop(context, 'OK');
-                  await Init().initShowDialog(context, state);
+                  if (await Init().initShowDialog(context, state)) {
+                    await Init().buildShowDialog(context, state);
+                  }
                 },
                 label: const Text('OK'),
               ),
@@ -214,8 +214,8 @@ class Dialogs {
     await showDialog(
         context: context,
         builder: (context) {
-          return WillPopScope(
-            onWillPop: () async => false,
+          return PopScope(
+            canPop: false,
             child: SingleChildScrollView(
               child: AlertDialog(
                 elevation: 24,
@@ -244,8 +244,7 @@ class Dialogs {
                         },
                         decoration: const InputDecoration(
                             labelText: "Reason",
-                            focusedBorder: UnderlineInputBorder(
-                                )),
+                            focusedBorder: UnderlineInputBorder()),
                       ),
                       const SizedBox(height: 10),
                       Row(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../Processes/Init.dart';
-import '../Processes/Process.dart';
+import '../Processes/init.dart';
+import '../Processes/process.dart';
 
 class SignScreen extends StatefulWidget {
   const SignScreen({super.key});

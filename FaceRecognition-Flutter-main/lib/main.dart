@@ -1,6 +1,6 @@
 import 'package:facerecognition_flutter/UI/Sign.dart';
 import 'package:flutter/material.dart';
-import 'UI/Employed.dart';
+import 'UI/employed.dart';
 import 'package:go_router/go_router.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();

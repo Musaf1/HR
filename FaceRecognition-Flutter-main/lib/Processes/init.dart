@@ -1,11 +1,12 @@
-import 'dart:io';
+
 import 'package:facerecognition_flutter/UI/Dialogs.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:facesdk_plugin/facesdk_plugin.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
-import 'Process.dart';
+import '../UI/facedetectionview.dart';
+import 'process.dart';
 
 class Init {
   final facesdkPlugin = FacesdkPlugin();
@@ -13,14 +14,8 @@ class Init {
   Future initShowDialog(context, state) async {
     if (await connectivityResult()) {
       if (await isServerOnline(context)) {
-        try {
-          if (await Process().buildingPosition()) {
-            init(context, state);
-            return true;
-          } else {
-            Dialogs().showDialogFun(context, state, 'Out of Building range');
-          }
-        } catch (e) {}
+        init(context, state);
+        return true;
       } else {
         Dialogs().showDialogFun(context, state, 'Connect to server');
       }
@@ -29,25 +24,28 @@ class Init {
     }
   }
 
+  Future buildShowDialog(context, state) async {
+    if (await Process().buildingPosition()) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => FaceRecognitionView(
+                  employedPageState: state,
+                )),
+      );
+    } else {
+      Dialogs().showDialogFun(context, state, 'Out of Building range');
+    }
+  }
+
   Future<void> init(context, state) async {
     //currentPersonList = await loadAllPersons();
     int facepluginState = -1;
     try {
-      if (Platform.isAndroid) {
-        await facesdkPlugin
-            .setActivation(
-            "CFO+UUpNLaDMlmdjoDlhBMbgCwT27CzQJ4xHpqe9rDOErwoEUeCGPRTfQkZEAFAFdO0+rTNRIwnQwpqqGxBbfnLkfyFeViVS5bpWZFk15QXP3ZtTEuU1rK5zsFwcZrqRUxsG9dXImc+Vw5Ddc9zBp9GEUuDycHLqC9KgQGVb0TS2u9Kz67HQOSDw9hskjBpjRbqiG+F/h5DBLPzjgFh1Y6vzgg6I59FzTOcdrdEbX7kI15Nwgf1hvHGtSgON/a0Fmw+XNdnxH2pVY96mcTemHYZAtxh8lA/t1DtTyZXpHjW8N6nq4UN2YDlKLXSrDzLpLHJmBsdpH71AXb7dfAq94Q==")
-            .then((value) => facepluginState = value ?? -1);
-      } else {
-        await facesdkPlugin
-            .setActivation(
-            "nWsdDhTp12Ay5yAm4cHGqx2rfEv0U+Wyq/tDPopH2yz6RqyKmRU+eovPeDcAp3T3IJJYm2LbPSEz"
-                "+e+YlQ4hz+1n8BNlh2gHo+UTVll40OEWkZ0VyxkhszsKN+3UIdNXGaQ6QL0lQunTwfamWuDNx7Ss"
-                "efK/3IojqJAF0Bv7spdll3sfhE1IO/m7OyDcrbl5hkT9pFhFA/iCGARcCuCLk4A6r3mLkK57be4r"
-                "T52DKtyutnu0PDTzPeaOVZRJdF0eifYXNvhE41CLGiAWwfjqOQOHfKdunXMDqF17s+LFLWwkeNAD"
-                "PKMT+F/kRCjnTcC8WPX3bgNzyUBGsFw9fcneKA==")
-            .then((value) => facepluginState = value ?? -1);
-      }
+      await facesdkPlugin
+          .setActivation(
+              "CFO+UUpNLaDMlmdjoDlhBMbgCwT27CzQJ4xHpqe9rDOErwoEUeCGPRTfQkZEAFAFdO0+rTNRIwnQwpqqGxBbfnLkfyFeViVS5bpWZFk15QXP3ZtTEuU1rK5zsFwcZrqRUxsG9dXImc+Vw5Ddc9zBp9GEUuDycHLqC9KgQGVb0TS2u9Kz67HQOSDw9hskjBpjRbqiG+F/h5DBLPzjgFh1Y6vzgg6I59FzTOcdrdEbX7kI15Nwgf1hvHGtSgON/a0Fmw+XNdnxH2pVY96mcTemHYZAtxh8lA/t1DtTyZXpHjW8N6nq4UN2YDlKLXSrDzLpLHJmBsdpH71AXb7dfAq94Q==")
+          .then((value) => facepluginState = value ?? -1);
       if (facepluginState == 0) {
         await facesdkPlugin
             .init()

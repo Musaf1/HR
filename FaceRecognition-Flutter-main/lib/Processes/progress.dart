@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class Progress {
@@ -5,11 +6,10 @@ class Progress {
     showDialog(
         context: context,
         builder: (context) {
-          return Center(
+          return const Center(
             child: SingleChildScrollView(
-              child: WillPopScope(
-                onWillPop: () async => false,
-                child: const AlertDialog(
+              child: PopScope(canPop: false,
+                child: AlertDialog(
                   elevation: 24,
                   title: Text(
                     'Loading...',

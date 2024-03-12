@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mac_address/mac_address.dart';
 import 'package:path_provider/path_provider.dart';
 import '../UI/Dialogs.dart';
-import 'Init.dart';
-import 'Progress.dart';
+import 'init.dart';
+import 'progress.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -95,7 +95,7 @@ class Process {
         onCreate: (Database db, int version) async {
       await db.execute('CREATE TABLE Face(templates BLOB , faceJpg BLOB )');
     });
-    final facesdkPlugin = await Init().facesdkPlugin;
+    final facesdkPlugin = Init().facesdkPlugin;
     final prefs = await SharedPreferences.getInstance();
     var id = prefs.getInt('id');
     var t = prefs.getString('token');
@@ -202,7 +202,9 @@ class Process {
         await signOutUser(context);
       }
       // }
-    } catch (e) {}
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   Future signUser(username, password, context, state) async {
@@ -253,12 +255,7 @@ class Process {
     GoRouter.of(context).go('/');
   }
 
-  seconds(x) {
-    var splited = x.split(':');
-    return (int.parse(splited[0]) * 3600) + (int.parse(splited[1]) * 60);
-  }
-
-  Future<int> timeRecord({task = false}) async {
+  Future timeRecord({task = false}) async {
     var data = await getData('date/');
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getString('att_time') == null) {
@@ -280,7 +277,6 @@ class Process {
       await setData('attendace_info/', td, t: t);
       await prefs.remove('att_time');
     }
-    return 1;
   }
 
   Future notDeparture() async {
@@ -311,22 +307,6 @@ class Process {
       return 'Attendance';
     }
     return 'Departure';
-  }
-
-  String readTimestampH(int timestamp) {
-    var format = DateFormat('HH:mm');
-    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000000);
-    var time = '';
-    time = format.format(date);
-    return time;
-  }
-
-  String readTimestampD(int timestamp) {
-    var format = DateFormat('yyyy-MM-dd');
-    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000000);
-    var time = '';
-    time = format.format(date);
-    return time;
   }
 
   Future buildPosition() async {
@@ -431,7 +411,7 @@ class Process {
     int start = seconds("7:45");
     int end = seconds("16:15");
 
-    //if (start <= time && time < end) {
+    //todo if (start <= time && time < end) {
     final prefs = await SharedPreferences.getInstance();
     var t = prefs.getString('token');
     var intDate = await getData('date/');
@@ -448,9 +428,30 @@ class Process {
     // return false;
   }
 
+  String readTimestampH(int timestamp) {
+    var format = DateFormat('HH:mm');
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000000);
+    var time = '';
+    time = format.format(date);
+    return time;
+  }
+
+  String readTimestampD(int timestamp) {
+    var format = DateFormat('yyyy-MM-dd');
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000000);
+    var time = '';
+    time = format.format(date);
+    return time;
+  }
+
   int timeToInt(String timeString) {
     final hours = int.parse(timeString.substring(0, 2));
     final minutes = int.parse(timeString.substring(3));
     return hours * 60 + minutes;
+  }
+
+  seconds(x) {
+    var splited = x.split(':');
+    return (int.parse(splited[0]) * 3600) + (int.parse(splited[1]) * 60);
   }
 }

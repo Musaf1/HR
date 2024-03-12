@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
 
-import '../Processes/Init.dart';
-import '../Processes/Process.dart';
-import '../Processes/Progress.dart';
+import 'package:flutter/material.dart';
+import '../Processes/init.dart';
+import '../Processes/process.dart';
+import '../Processes/progress.dart';
 import 'Dialogs.dart';
-import 'facedetectionview.dart';
 
 class EmployedPage extends StatefulWidget {
   const EmployedPage({super.key});
@@ -92,15 +91,7 @@ class EmployedPageState extends State<EmployedPage> {
                                                             if (snapshot2
                                                                     .data ==
                                                                 'Attendance') {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            FaceRecognitionView(
-                                                                              employedPageState: this,
-                                                                            )),
-                                                              );
+                                                              Init().buildShowDialog(context, this);
                                                             } else {
                                                               Dialogs()
                                                                   .confirmDeparture(

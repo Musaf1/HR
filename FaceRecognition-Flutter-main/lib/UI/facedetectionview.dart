@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:facerecognition_flutter/UI/Employed.dart';
+import 'package:facerecognition_flutter/UI/employed.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:facesdk_plugin/facedetection_interface.dart';
@@ -7,7 +7,7 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:facesdk_plugin/facesdk_plugin.dart';
 import 'package:sqflite/sqflite.dart';
-import '../Processes/Process.dart';
+import '../Processes/process.dart';
 
 class FaceRecognitionView extends StatefulWidget {
   final EmployedPageState employedPageState;
@@ -29,7 +29,6 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
   String _identifiedName = "";
   final _facesdkPlugin = FacesdkPlugin();
   late bool _cameraLens;
-  late int index;
   late String textStatus = 'You have been attended';
   late String imageStatus = 'assets/correct.png';
   FaceDetectionViewController? faceDetectionViewController;
@@ -103,7 +102,7 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
             -1;
         if (maxSimilarity < similarity) {
           final prefs = await SharedPreferences.getInstance();
-          maxSimilarityName = (await prefs.getString('name'))!;
+          maxSimilarityName = prefs.getString('name')!;
           maxSimilarity = similarity;
           maxLiveness = face['liveness'];
           enrolledFace = list[0]['faceJpg'];
@@ -112,17 +111,7 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
         if (maxSimilarity > _identifyThreshold &&
             maxLiveness > _livenesThreshold) {
           faceDetectionViewController?.stopCamera();
-          index = await Process().timeRecord();
-          if (index == 1) {
-            textStatus = 'You have been attended';
-            imageStatus = 'assets/correct.png';
-          } else if (index == 2) {
-            textStatus = 'You have attended before';
-            imageStatus = 'assets/logistics.png';
-          } else {
-            textStatus = 'Outside working hours';
-            imageStatus = 'assets/working.png';
-          }
+          await Process().timeRecord();
           recognized = true;
         }
     }
