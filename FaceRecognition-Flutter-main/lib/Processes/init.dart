@@ -11,6 +11,7 @@ import 'process.dart';
 class Init {
   final facesdkPlugin = FacesdkPlugin();
 
+  // show dialog if not connected
   Future initShowDialog(context, state) async {
     if (await connectivityResult()) {
       if (await isServerOnline(context)) {
@@ -24,6 +25,7 @@ class Init {
     }
   }
 
+  // show dialog if not in building range
   Future buildShowDialog(context, state) async {
     if (await Process().buildingPosition()) {
       Navigator.push(
@@ -38,6 +40,7 @@ class Init {
     }
   }
 
+  //initialize faces SDK
   Future<void> init(context, state) async {
     //currentPersonList = await loadAllPersons();
     int facepluginState = -1;
@@ -68,6 +71,7 @@ class Init {
     if (!state.mounted) return;
   }
 
+  //check if connected
   Future<bool> connectivityResult() async {
     try {
       final connectivityResult = await (Connectivity().checkConnectivity());
@@ -81,6 +85,7 @@ class Init {
     return false;
   }
 
+  //check if server online
   Future<bool> isServerOnline(context) async {
     try {
       final response = await http.get(Uri.parse(Process().baseUrl));

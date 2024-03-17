@@ -12,6 +12,7 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
+ //routers for navigation
   final _router = GoRouter(
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SignScreen()),

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 class Progress {
+  //progress dialog
   progress(context) async {
     showDialog(
         context: context,

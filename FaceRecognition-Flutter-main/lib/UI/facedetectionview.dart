@@ -200,14 +200,14 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
                     width: double.infinity,
                     height: double.infinity,
                     color: Theme.of(context).colorScheme.background,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          SingleChildScrollView(
-                            child: Column(
+                    child: SingleChildScrollView(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 _enrolledFace != null
@@ -250,8 +250,8 @@ class FaceRecognitionViewState extends State<FaceRecognitionView> {
                                       ),
                               ],
                             ),
-                          ),
-                        ]),
+                          ]),
+                    ),
                   )),
             ],
           ),

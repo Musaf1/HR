@@ -26,6 +26,7 @@ class Process {
   String baseUrl = "http://192.168.8.48:8000/";
   String apiUrl = "http://192.168.8.48:8000/api/";
 
+  // get data http
   Future getData(s, {t}) async {
     try {
       var response = await http.get(
@@ -44,6 +45,7 @@ class Process {
     }
   }
 
+  // set data http
   Future setData(s, data, {t}) async {
     try {
       var response = await http.post(
@@ -68,6 +70,7 @@ class Process {
     }
   }
 
+  // update data http
   Future updateData(s, data, t) async {
     try {
       var response = await http.put(
@@ -88,6 +91,7 @@ class Process {
     }
   }
 
+  //add user face in app and store in server
   Future addFace() async {
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'mydb.db');
@@ -189,10 +193,10 @@ class Process {
     }
   }
 
+  //user access to home page
   Future userAccess(context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      //user['mac'] == mac ? await signOutUser(context) : null;
       if (prefs.getInt('change_mac')! < 4) {
         GoRouter.of(context).go('/EmployedPage');
       } else {
@@ -207,6 +211,7 @@ class Process {
     }
   }
 
+  //sign user and store the information about it
   Future signUser(username, password, context, state) async {
     Progress().progress(context);
     var data = {
@@ -242,6 +247,7 @@ class Process {
     }
   }
 
+  //sign out user and remove data
   Future signOutUser(context) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.getString('att_time') != null ? await timeRecord() : null;
@@ -255,6 +261,7 @@ class Process {
     GoRouter.of(context).go('/');
   }
 
+  // record attendance in server
   Future timeRecord({task = false}) async {
     var data = await getData('date/');
     final prefs = await SharedPreferences.getInstance();
@@ -279,6 +286,7 @@ class Process {
     }
   }
 
+  //handle if user do not departure manually
   Future notDeparture() async {
     final prefs = await SharedPreferences.getInstance();
     var data = await getData('date/');
@@ -301,6 +309,7 @@ class Process {
     return true;
   }
 
+  //check attendance status
   Future<String> attStatus() async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getString('att_time') == null) {
@@ -309,6 +318,7 @@ class Process {
     return 'Departure';
   }
 
+  //get building position
   Future buildPosition() async {
     final prefs = await SharedPreferences.getInstance();
     var deId = prefs.getInt('build');
@@ -317,6 +327,7 @@ class Process {
     return d['location'].split(',');
   }
 
+  //check the distance
   Future<bool> buildingPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -347,6 +358,7 @@ class Process {
         10000);
   }
 
+  //get mac address or android id
   Future getMac(linId, context) async {
     final prefs = await SharedPreferences.getInstance();
     var mac = await GetMac.macAddress == ""
@@ -374,6 +386,7 @@ class Process {
     }
   }
 
+  //store mac address in the server
   Future updateMac(linId, context) async {
     final prefs = await SharedPreferences.getInstance();
     var t = prefs.getString('token');
@@ -389,6 +402,7 @@ class Process {
     await userAccess(context);
   }
 
+  //add task leave
   Future addTaskLeave(String d) async {
     var intDate = await getData('date/');
     final prefs = await SharedPreferences.getInstance();
@@ -405,6 +419,7 @@ class Process {
     await setData('leave/', data, t: t);
   }
 
+  //check if user can attendance
   Future<bool> canAttendance() async {
     var getTime = await getData('time/');
     int time = seconds(getTime['time']);
@@ -428,6 +443,7 @@ class Process {
     // return false;
   }
 
+  //convert time stamp to string
   String readTimestampH(int timestamp) {
     var format = DateFormat('HH:mm');
     var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000000);
@@ -436,6 +452,7 @@ class Process {
     return time;
   }
 
+  //convert time stamp to string
   String readTimestampD(int timestamp) {
     var format = DateFormat('yyyy-MM-dd');
     var date = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000000);
@@ -444,12 +461,14 @@ class Process {
     return time;
   }
 
+  //convert string timestamp to minutes
   int timeToInt(String timeString) {
     final hours = int.parse(timeString.substring(0, 2));
     final minutes = int.parse(timeString.substring(3));
     return hours * 60 + minutes;
   }
 
+  //convert string timestamp to seconds
   seconds(x) {
     var splited = x.split(':');
     return (int.parse(splited[0]) * 3600) + (int.parse(splited[1]) * 60);

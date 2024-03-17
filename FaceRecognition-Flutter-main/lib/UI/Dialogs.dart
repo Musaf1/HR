@@ -7,6 +7,7 @@ class Dialogs {
   final _formKey = GlobalKey<FormState>();
   static const color3 = Color.fromRGBO(0, 150, 150, 1);
 
+  //confirm departure dialog
   Future<void> confirmDeparture(context, state) async {
     await showDialog(
         context: context,
@@ -42,9 +43,13 @@ class Dialogs {
                               label: const Text('Confirm'),
                             ),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
                           Expanded(
                             child: ElevatedButton.icon(
                               icon: const Icon(
@@ -53,9 +58,9 @@ class Dialogs {
                               ),
                               style: ElevatedButton.styleFrom(
                                   shape: const RoundedRectangleBorder(
-                                borderRadius:
+                                    borderRadius:
                                     BorderRadius.all(Radius.circular(12.0)),
-                              )),
+                                  )),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -101,6 +106,7 @@ class Dialogs {
         });
   }
 
+  //change mac address dialog
   Future changeMac(theContext, text, {bool b = true, linId}) async {
     await showDialog(
         context: theContext,
@@ -124,21 +130,23 @@ class Dialogs {
                         children: [
                           Visibility(
                             visible: b,
-                            child: ElevatedButton.icon(
-                              icon: const Icon(
-                                Icons.check_circle_outline,
-                                color: Colors.green,
+                            child: Expanded(
+                              child: ElevatedButton.icon(
+                                icon: const Icon(
+                                  Icons.check_circle_outline,
+                                  color: Colors.green,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12.0)),
+                                )),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  await Process().updateMac(linId, theContext);
+                                },
+                                label: const Text('Confirm'),
                               ),
-                              style: ElevatedButton.styleFrom(
-                                  shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12.0)),
-                              )),
-                              onPressed: () async {
-                                Navigator.of(context).pop();
-                                await Process().updateMac(linId, theContext);
-                              },
-                              label: const Text('Confirm'),
                             ),
                           ),
                           Visibility(
@@ -146,20 +154,28 @@ class Dialogs {
                               child: const SizedBox(
                                 width: 10,
                               )),
-                          ElevatedButton.icon(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: Colors.redAccent,
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: Colors.redAccent,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(12.0)),
+                                  )),
+                              onPressed: () async {
+                                await Process().signOutUser(context);
+                                Navigator.of(context).pop();
+                              },
+                              label: const Text('Cancel'),
                             ),
-                            style: ElevatedButton.styleFrom(
-                                shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
-                            )),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            label: const Text('Cancel'),
                           )
                         ],
                       ),
@@ -172,6 +188,7 @@ class Dialogs {
         });
   }
 
+  //show dialog text
   void showDialogFun(context, state, text) {
     showDialog<String>(
       barrierDismissible: false,
@@ -209,6 +226,7 @@ class Dialogs {
     );
   }
 
+  // task field dialog
   Future<String> showDialogTaskField(context, state) async {
     String description = '';
     await showDialog(
@@ -249,42 +267,50 @@ class Dialogs {
                       const SizedBox(height: 10),
                       Row(
                         children: [
-                          ElevatedButton.icon(
-                            icon: const Icon(
-                              Icons.check_circle_outline,
-                              color: Colors.green,
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              icon: const Icon(
+                                Icons.check_circle_outline,
+                                color: Colors.green,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12.0)),
+                              )),
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  Navigator.of(context).pop();
+                                  await Process().timeRecord(task: true);
+                                  state.setState(() {});
+                                }
+                              },
+                              label: const Text('OK'),
                             ),
-                            style: ElevatedButton.styleFrom(
-                                shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
-                            )),
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: Colors.redAccent,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(12.0)),
+                                  )),
+                              onPressed: () {
                                 Navigator.of(context).pop();
-                                await Process().timeRecord(task: true);
-                                state.setState(() {});
-                              }
-                            },
-                            label: const Text('OK'),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          ElevatedButton.icon(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: Colors.redAccent,
+                              },
+                              label: const Text('Cancel'),
                             ),
-                            style: ElevatedButton.styleFrom(
-                                shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
-                            )),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            label: const Text('Cancel'),
                           )
                         ],
                       ),

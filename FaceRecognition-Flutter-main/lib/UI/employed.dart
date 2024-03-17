@@ -33,7 +33,7 @@ class EmployedPageState extends State<EmployedPage> {
                       children: <Widget>[
                         const SizedBox(height: 10),
                         Row(
-                          children: <Widget>[
+                          children: [
                             FutureBuilder(
                               future: Process().canAttendance(),
                               builder: (BuildContext context,
@@ -111,6 +111,10 @@ class EmployedPageState extends State<EmployedPage> {
                                     : const CircularProgressIndicator();
                               },
                             ),
+                          ],
+                        ),
+                        Row(
+                          children: [
                             FutureBuilder(
                               future: Process().canAttendance(),
                               builder: (BuildContext context,
@@ -119,12 +123,16 @@ class EmployedPageState extends State<EmployedPage> {
                                     ? Visibility(
                                         visible: snapshot3.data,
                                         child: const SizedBox(
-                                          width: 20,
+                                          height: 20,
                                         ),
                                       )
                                     : Container();
                               },
                             ),
+                          ],
+                        ),
+                        Row(
+                          children: [
                             Expanded(
                               child: ElevatedButton.icon(
                                   label: const Text(
@@ -146,7 +154,7 @@ class EmployedPageState extends State<EmployedPage> {
                                     Init().initShowDialog(context, this);
                                     await Process().signOutUser(context);
                                   }),
-                            )
+                            ),
                           ],
                         ),
                       ],
