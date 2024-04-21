@@ -1,4 +1,6 @@
 
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:facerecognition_flutter/UI/Dialogs.dart';
 import 'package:facesdk_plugin/facesdk_plugin.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +29,9 @@ class Init {
 
   // show dialog if not in building range
   Future buildShowDialog(context, state) async {
-    if (await Process().buildingPosition()) {
+    double i = await Process().buildingPosition();
+    if (i <=
+        40) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -36,7 +40,7 @@ class Init {
                 )),
       );
     } else {
-      Dialogs().showDialogFun(context, state, 'Out of Building range');
+      Dialogs().showDialogFun(context, state, 'Out of Building range ${i.toInt()} meters');
     }
   }
 

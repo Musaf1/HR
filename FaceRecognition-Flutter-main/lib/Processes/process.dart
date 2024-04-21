@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:io';
 import 'package:android_id/android_id.dart';
 import 'package:intl/intl.dart';
@@ -23,8 +25,8 @@ import 'dart:math' as math;
 class Process {
   static const color3 = Color.fromRGBO(0, 150, 150, 1);
 
-  String baseUrl = "http://192.168.8.48:8000/";
-  String apiUrl = "http://192.168.8.48:8000/api/";
+  String baseUrl = "http://192.168.8.147:8000/";
+  String apiUrl = "http://192.168.8.147:8000/api/";
 
   // get data http
   Future getData(s, {t}) async {
@@ -63,7 +65,8 @@ class Process {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
-        return Future.error('Server Error');
+        print('Server Error');
+        return 'Server Error';
       }
     } catch (e) {
       return Future.error(e);
@@ -205,7 +208,6 @@ class Process {
             b: false);
         await signOutUser(context);
       }
-      // }
     } catch (e) {
       throw Exception(e);
     }
@@ -219,7 +221,7 @@ class Process {
       "password": password.toString()
     };
     var token = await setData('api-token-auth/', data);
-    if (token['token'] != null) {
+    if (token != "Server Error") {
       var users = await getData('user/', t: token['token']);
       for (var user in users) {
         if (user['username'] == username) {
@@ -328,7 +330,7 @@ class Process {
   }
 
   //check the distance
-  Future<bool> buildingPosition() async {
+  Future<double> buildingPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -353,9 +355,8 @@ class Process {
     var v = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     //todo 0.7 / 6362.72
-    return (Geolocator.distanceBetween(
-            v.latitude, v.longitude, double.parse(d[0]), double.parse(d[1])) <=
-        10000);
+    return Geolocator.distanceBetween(
+            v.latitude, v.longitude, double.parse(d[0]), double.parse(d[1]));
   }
 
   //get mac address or android id

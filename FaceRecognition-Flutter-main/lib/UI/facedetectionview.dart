@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages, deprecated_member_use
+
 import 'dart:async';
 import 'package:facerecognition_flutter/UI/employed.dart';
 import 'package:flutter/foundation.dart';

@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, use_build_context_synchronously
+
 import 'package:facerecognition_flutter/Processes/process.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
