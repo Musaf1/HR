@@ -1,7 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages, deprecated_member_use
 
 import 'dart:async';
-import 'package:facerecognition_flutter/UI/employed.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:facesdk_plugin/facedetection_interface.dart';
@@ -9,7 +8,10 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:facesdk_plugin/facesdk_plugin.dart';
 import 'package:sqflite/sqflite.dart';
-import '../Processes/process.dart';
+
+import '../Control/process.dart';
+import 'employed.dart';
+
 
 class FaceRecognitionView extends StatefulWidget {
   final EmployedPageState employedPageState;

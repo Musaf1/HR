@@ -1,8 +1,9 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import '../Processes/init.dart';
-import '../Processes/process.dart';
+
+import '../Control/init.dart';
+import '../Control/process.dart';
 
 class SignScreen extends StatefulWidget {
   const SignScreen({super.key});

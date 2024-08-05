@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
-import '../Processes/init.dart';
-import '../Processes/process.dart';
-import '../Processes/progress.dart';
+
+import '../Control/init.dart';
+import '../Control/process.dart';
 import 'Dialogs.dart';
+import '../Control/progress.dart';
 
 class EmployedPage extends StatefulWidget {
   const EmployedPage({super.key});

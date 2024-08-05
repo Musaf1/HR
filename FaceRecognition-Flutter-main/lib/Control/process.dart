@@ -8,7 +8,7 @@ import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mac_address/mac_address.dart';
 import 'package:path_provider/path_provider.dart';
-import '../UI/Dialogs.dart';
+import '../Widget/Dialogs.dart';
 import 'init.dart';
 import 'progress.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,16 +25,17 @@ import 'dart:math' as math;
 class Process {
   static const color3 = Color.fromRGBO(0, 150, 150, 1);
 
-  String baseUrl = "http://192.168.8.147:8000/";
-  String apiUrl = "http://192.168.8.147:8000/api/";
+  String baseUrl = "https://ems-70yg.onrender.com/";
+  String apiUrl = "https://ems-70yg.onrender.com/api/";
+  //todo https
 
   // get data http
-  Future getData(s, {t}) async {
+  Future getData(string, {text}) async {
     try {
       var response = await http.get(
-        Uri.parse(apiUrl + s),
+        Uri.parse(apiUrl + string),
         headers: {
-          'Authorization': 'TOKEN $t',
+          'Authorization': 'TOKEN $text',
         },
       );
       if (response.statusCode == 200) {
@@ -48,15 +49,15 @@ class Process {
   }
 
   // set data http
-  Future setData(s, data, {t}) async {
+  Future setData(string, data, {text}) async {
     try {
       var response = await http.post(
-        Uri.parse(apiUrl + s),
+        Uri.parse(apiUrl + string),
         body: jsonEncode(data),
-        headers: t != null
+        headers: text != null
             ? <String, String>{
                 'Content-Type': 'application/json; charset=UTF-8',
-                'Authorization': 'TOKEN $t',
+                'Authorization': 'TOKEN $text',
               }
             : <String, String>{
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -65,7 +66,6 @@ class Process {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       } else {
-        print('Server Error');
         return 'Server Error';
       }
     } catch (e) {
@@ -74,14 +74,14 @@ class Process {
   }
 
   // update data http
-  Future updateData(s, data, t) async {
+  Future updateData(string, data, text) async {
     try {
       var response = await http.put(
-        Uri.parse(apiUrl + s),
+        Uri.parse(apiUrl + string),
         body: jsonEncode(data),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'TOKEN $t',
+          'Authorization': 'TOKEN $text',
         },
       );
       if (response.statusCode == 200) {
@@ -105,8 +105,8 @@ class Process {
     final facesdkPlugin = Init().facesdkPlugin;
     final prefs = await SharedPreferences.getInstance();
     var id = prefs.getInt('id');
-    var t = prefs.getString('token');
-    var data = await getData('linkUser/', t: t);
+    var token = prefs.getString('token');
+    var data = await getData('linkUser/', text: token);
     for (var d in data) {
       if (d['name'] == id) {
         if (d['image'] == '${baseUrl}media/default.png' || d['image'] == null) {
@@ -140,7 +140,7 @@ class Process {
                   options: Options(
                     headers: <String, String>{
                       'Content-Type': 'application/json; charset=UTF-8',
-                      'Authorization': 'TOKEN $t',
+                      'Authorization': 'TOKEN $token',
                     },
                   ));
               await Fluttertoast.showToast(
@@ -222,14 +222,14 @@ class Process {
     };
     var token = await setData('api-token-auth/', data);
     if (token != "Server Error") {
-      var users = await getData('user/', t: token['token']);
+      var users = await getData('user/', text: token['token']);
       for (var user in users) {
         if (user['username'] == username) {
-          var linIds = await getData('linkUser/', t: token['token']);
+          var linIds = await getData('linkUser/', text: token['token']);
           for (var linId in linIds) {
             if (linId['user'] == user['id']) {
               var userInfo = await getData('employees_info/${linId['name']}/',
-                  t: token['token']);
+                  text: token['token']);
               final prefs = await SharedPreferences.getInstance();
               await prefs.setInt('change_mac', linId['change_mac']);
               await prefs.setInt('id', userInfo['id']);
@@ -283,7 +283,7 @@ class Process {
         "time_leaves": task ? "16:00" : timeNow['time'],
         "total_time": (math.max(time1, time2) - math.min(time1, time2)) / 60,
       };
-      await setData('attendace_info/', td, t: t);
+      await setData('attendace_info/', td, text: t);
       await prefs.remove('att_time');
     }
   }
@@ -304,7 +304,7 @@ class Process {
           "Time_attendace": readTimestampH(double.parse(attTime).toInt()),
           "time_leaves": "12:00"
         };
-        await setData('attendace_info/', td, t: t);
+        await setData('attendace_info/', td, text: t);
         await prefs.remove('att_time');
       }
     }
@@ -325,7 +325,7 @@ class Process {
     final prefs = await SharedPreferences.getInstance();
     var deId = prefs.getInt('build');
     var t = prefs.getString('token');
-    var d = await getData('building_info/$deId/', t: t);
+    var d = await getData('building_info/$deId/', text: t);
     return d['location'].split(',');
   }
 
@@ -354,7 +354,6 @@ class Process {
     var d = await buildPosition();
     var v = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    //todo 0.7 / 6362.72
     return Geolocator.distanceBetween(
             v.latitude, v.longitude, double.parse(d[0]), double.parse(d[1]));
   }
@@ -367,14 +366,14 @@ class Process {
         : await GetMac.macAddress;
     if (linId['mac'] != mac) {
       if (linId['change_mac']! < 4) {
-        int i = 4 - prefs.getInt('change_mac')!;
-        if (i == 1) {
+        int macNum = 4 - prefs.getInt('change_mac')!;
+        if (macNum == 1) {
           await Dialogs().changeMac(
               context, 'You can change device 1 more time',
               linId: linId);
         } else {
           await Dialogs().changeMac(
-              context, 'You can change device $i more times',
+              context, 'You can change device $macNum more times',
               linId: linId);
         }
       } else {
@@ -390,7 +389,7 @@ class Process {
   //store mac address in the server
   Future updateMac(linId, context) async {
     final prefs = await SharedPreferences.getInstance();
-    var t = prefs.getString('token');
+    var token = prefs.getString('token');
     var data = {
       "mac": await GetMac.macAddress == ""
           ? await const AndroidId().getId()
@@ -399,7 +398,7 @@ class Process {
       "name": linId['name']
     };
     await prefs.setInt('change_mac', linId['change_mac']);
-    await updateData('linkUser/${linId['id']}/', data, t);
+    await updateData('linkUser/${linId['id']}/', data, token);
     await userAccess(context);
   }
 
@@ -407,7 +406,7 @@ class Process {
   Future addTaskLeave(String d) async {
     var intDate = await getData('date/');
     final prefs = await SharedPreferences.getInstance();
-    var t = prefs.getString('token');
+    var token = prefs.getString('token');
     var p = prefs.getInt('uid');
     String date = readTimestampD(intDate['date'].toInt());
     var data = {
@@ -417,7 +416,7 @@ class Process {
       "reason": d,
       "user": p
     };
-    await setData('leave/', data, t: t);
+    await setData('leave/', data, text: token);
   }
 
   //check if user can attendance
@@ -431,7 +430,7 @@ class Process {
     final prefs = await SharedPreferences.getInstance();
     var t = prefs.getString('token');
     var intDate = await getData('date/');
-    var data = await getData('attendace_info/', t: t);
+    var data = await getData('attendace_info/', text: t);
     var p = prefs.getInt('id');
     String date = readTimestampD(intDate['date'].toInt());
     for (var d in data) {
@@ -470,8 +469,8 @@ class Process {
   }
 
   //convert string timestamp to seconds
-  seconds(x) {
-    var splited = x.split(':');
+  seconds(string) {
+    var splited = string.split(':');
     return (int.parse(splited[0]) * 3600) + (int.parse(splited[1]) * 60);
   }
 }
